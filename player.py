@@ -1,6 +1,6 @@
 import pygame
 from circleshape import CircleShape
-from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOT_SPEED,SHOT_RADIUS, PLAYER_SHOT_COOLDOWN_SECONDS, SCREEN_HEIGHT, SCREEN_WIDTH
+from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOT_SPEED,SHOT_RADIUS, PLAYER_SHOT_COOLDOWN_SECONDS, SCREEN_HEIGHT, SCREEN_WIDTH, PLAYER_INVINIBILITY_TIMER
 from shot import Shot
 
 class Player(CircleShape):
@@ -8,6 +8,8 @@ class Player(CircleShape):
         super().__init__(x, y, radius=PLAYER_RADIUS)
         self.rotation = 0
         self.shot_cooldown = 0
+        self.invincibility_timer = 0
+        self.lives = 3
 
     # in the Player class
     def triangle(self):
@@ -19,6 +21,9 @@ class Player(CircleShape):
         return [a, b, c]
 
     def draw(self, screen):
+        if self.invincibility_timer > 0:
+            if int(self.invincibility_timer * 10) % 2 == 0:
+                return
         pygame.draw.polygon(screen, "white", self.triangle(), LINE_WIDTH)
 
     def update(self, dt):
@@ -38,6 +43,8 @@ class Player(CircleShape):
         
         if self.shot_cooldown > 0:
             self.shot_cooldown -= dt
+        if self.invincibility_timer > 0:
+            self.invincibility_timer -= dt
 
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt

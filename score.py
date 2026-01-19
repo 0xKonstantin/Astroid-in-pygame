@@ -10,3 +10,6 @@ class Score(pygame.sprite.Sprite):
 
     def get_score(self):
         return self.score
+
+    def subtract_score(self, amount):
+        self.score -= amount
